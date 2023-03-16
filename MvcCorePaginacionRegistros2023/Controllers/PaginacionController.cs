@@ -34,6 +34,44 @@ namespace MvcCorePaginacionRegistros2023.Controllers
         }
 
 
+        // Metodo para el SP_GRUPO_EMPLEADOS_OFICIO
+        public async Task<IActionResult>
+            EmpleadosOficio(int? posicion, string oficio)
+        {
+          if(posicion == null) 
+            {
+                posicion = 1;
+                return View();
+            }
+          else
+            {
+                ModelPaginarEmpleados model =
+                await this.repo.GetGrupoEmpleadosOficioAsync(posicion.Value, oficio);
+                List<Empleado> empleados = model.Empleados;
+                int numRegistros = model.NumeroRegistros;
+                ViewData["REGISTROS"] = numRegistros;
+                ViewData["OFICIO"] = oficio;
+                return View(empleados);
+            }
+            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult>
+            EmpleadosOficio(string oficio)
+        {   
+            ModelPaginarEmpleados model =
+                await this.repo.GetGrupoEmpleadosOficioAsync(1,oficio);
+            List<Empleado> empleados = model.Empleados;
+               
+            int numRegistros = this.repo.GetNumeroEmpleadosOficio(oficio);
+            ViewData["REGISTROS"] = numRegistros;
+            ViewData["OFICIO"] = oficio;
+            return View(empleados);
+        }
+
+
+      
 
 
         public async Task<IActionResult>
